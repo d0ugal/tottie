@@ -102,7 +102,7 @@ def apply_now_playing_overlay(img: Image.Image, track: str, artist: str) -> Imag
             px = START_X - 1 + dx
             py = START_Y + dy
             if 0 <= px < SIZE and 0 <= py < SIZE:
-                r, g, b = pix[px, py]
+                r, g, b = pix[px, py]  # type: ignore[misc]
                 pix[px, py] = (r >> 2, g >> 2, b >> 2)
 
     def draw_string(text: str, y: int) -> None:
