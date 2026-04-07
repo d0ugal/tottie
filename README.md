@@ -23,7 +23,7 @@ pip install tottie
 ```python
 from tottie import render_moon
 
-img = render_moon(lat="55.93", lon="-4.19", elev=50)
+img = render_moon(lat="51.5", lon="-0.1", elev=10)
 img.save("moon.png")
 ```
 

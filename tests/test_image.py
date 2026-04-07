@@ -2,7 +2,6 @@
 
 import struct
 
-import pytest
 from PIL import Image
 
 from tottie.image import crop_and_resize, to_rgb565

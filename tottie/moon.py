@@ -10,6 +10,7 @@ import math
 import os
 
 from PIL import Image
+from PIL.PyAccess import PyAccess
 
 SIZE = 64
 CX, CY = 31.5, 31.5
@@ -21,13 +22,15 @@ HORIZON_GLOW_DEG = 8
 LUNAR_CYCLE = 29.53
 
 _TEXTURE_PATH = os.path.join(os.path.dirname(__file__), "lune.png")
-_texture = None
+_texture: PyAccess | None = None
 
 
-def _load_texture():
+def _load_texture() -> PyAccess:
     global _texture
     if _texture is None:
-        _texture = Image.open(_TEXTURE_PATH).convert("L").load()
+        loaded = Image.open(_TEXTURE_PATH).convert("L").load()
+        assert loaded is not None
+        _texture = loaded
     return _texture
 
 
@@ -157,8 +160,8 @@ def render_image(lat: str, lon: str, elev: int, mirror_ew: bool = True) -> Image
     """Render a 64×64 moon phase image and return it as a PIL Image.
 
     Args:
-        lat: Latitude as a string (e.g. "55.9" or "55:54:00").
-        lon: Longitude as a string (e.g. "-4.2" or "-4:12:00").
+        lat: Latitude as a string (e.g. "51.5" or "51:30:00").
+        lon: Longitude as a string (e.g. "-0.1" or "-0:06:00").
         elev: Elevation in metres.
         mirror_ew: Mirror east/west. Set True when the display is on a
             north-facing wall so the moon rises on the correct side.
@@ -170,6 +173,7 @@ def render_image(lat: str, lon: str, elev: int, mirror_ew: bool = True) -> Image
 
     img = Image.new("RGB", (SIZE, SIZE), BG)
     pix = img.load()
+    assert pix is not None
 
     rotation = data["rotation"]
     ew = -1.0 if mirror_ew else 1.0

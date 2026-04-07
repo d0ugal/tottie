@@ -91,6 +91,7 @@ def apply_now_playing_overlay(img: Image.Image, track: str, artist: str) -> Imag
         return img
 
     pix = img.load()
+    assert pix is not None
     total_h = (LINE_SPACING if track_str else 0) + (GLYPH_H if artist_str else 0)
     track_w = _text_width(track_str)
     artist_w = _text_width(artist_str)
