@@ -1,0 +1,8 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "python",
+      "bootstrap-sha": "8e24f61624f6b424583794662092b0ee62e33e21"
+    }
+  }
+}
