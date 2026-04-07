@@ -25,7 +25,7 @@ def test_apply_overlay_writes_pixels():
     img = _black()
     apply_now_playing_overlay(img, "A", "")
     # At least one pixel should be white (the glyph)
-    pixels = list(img.getdata())
+    pixels = [img.getpixel((x, y)) for x in range(img.width) for y in range(img.height)]
     assert any(p == (255, 255, 255) for p in pixels)
 
 

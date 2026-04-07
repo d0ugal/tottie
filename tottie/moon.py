@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import math
 import os
+from typing import Any
 
 from PIL import Image
-from PIL.PyAccess import PyAccess
 
 SIZE = 64
 CX, CY = 31.5, 31.5
@@ -22,10 +22,10 @@ HORIZON_GLOW_DEG = 8
 LUNAR_CYCLE = 29.53
 
 _TEXTURE_PATH = os.path.join(os.path.dirname(__file__), "lune.png")
-_texture: PyAccess | None = None
+_texture: Any = None
 
 
-def _load_texture() -> PyAccess:
+def _load_texture() -> Any:
     global _texture
     if _texture is None:
         loaded = Image.open(_TEXTURE_PATH).convert("L").load()
