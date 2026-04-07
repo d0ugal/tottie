@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tottie"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tottie wee image rendering library for 64×64 LED matrix displays"
 readme = "README.md"
 license = { text = "MIT" }
