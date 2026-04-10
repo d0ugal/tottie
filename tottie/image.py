@@ -10,12 +10,32 @@ from PIL import Image
 SIZE = 64
 
 
-def crop_and_resize(img: Image.Image, size: int = SIZE) -> Image.Image:
-    """Centre-crop to square then resize to size×size."""
+def crop_and_resize(
+    img: Image.Image,
+    size: int = SIZE,
+    anchor: str = "center",
+) -> Image.Image:
+    """Crop to a square region then resize to size×size.
+
+    anchor controls which part of the image is taken:
+      "center"       — centre of the image (default)
+      "top_left"     — top-left corner
+      "top_right"    — top-right corner
+      "bottom_left"  — bottom-left corner
+      "bottom_right" — bottom-right corner
+    """
     w, h = img.size
     m = min(w, h)
-    left = (w - m) // 2
-    top = (h - m) // 2
+    if anchor == "top_left":
+        left, top = 0, 0
+    elif anchor == "top_right":
+        left, top = w - m, 0
+    elif anchor == "bottom_left":
+        left, top = 0, h - m
+    elif anchor == "bottom_right":
+        left, top = w - m, h - m
+    else:  # "center" or unknown
+        left, top = (w - m) // 2, (h - m) // 2
     return img.crop((left, top, left + m, top + m)).resize(
         (size, size), Image.Resampling.LANCZOS
     )
