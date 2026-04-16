@@ -1,6 +1,7 @@
 """Tests for tottie.overlay."""
 
 from PIL import Image
+
 from tottie.overlay import apply_now_playing_overlay, render_now_playing_frames
 
 
