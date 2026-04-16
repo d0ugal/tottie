@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import struct
-from typing import cast
-
+import numpy as np
 from PIL import Image
 
 SIZE = 64
@@ -48,12 +46,7 @@ def to_rgb565(img: Image.Image) -> bytes:
     Suitable for displays that accept raw RGB565 over a serial or network
     transport (e.g. Trinity ESP32 over MQTT).
     """
-    rgb = img.convert("RGB")
-    w, h = rgb.size
-    buf = bytearray(w * h * 2)
-    for y in range(h):
-        for x in range(w):
-            r, g, b = cast(tuple[int, int, int], rgb.getpixel((x, y)))
-            rgb565 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
-            struct.pack_into(">H", buf, (y * w + x) * 2, rgb565)
-    return bytes(buf)
+    arr = np.array(img.convert("RGB"), dtype=np.uint16)
+    r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
+    rgb565 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
+    return rgb565.astype(">u2").tobytes()
