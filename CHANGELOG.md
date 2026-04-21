@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/d0ugal/tottie/compare/v0.3.0...v0.4.0) (2026-04-21)
+
+
+### Features
+
+* move corner char to bottom-right, scale to 2×2 pixels ([bd262f3](https://github.com/d0ugal/tottie/commit/bd262f35d310ab765dda89131f09ba121022802c))
+
 ## [0.3.0](https://github.com/d0ugal/tottie/compare/v0.2.1...v0.3.0) (2026-04-21)
 
 
