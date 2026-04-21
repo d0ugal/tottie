@@ -1,8 +1,7 @@
 """Tests for tottie.overlay."""
 
 from PIL import Image
-
-from tottie.overlay import apply_now_playing_overlay, render_now_playing_frames
+from tottie.overlay import apply_corner_char, apply_now_playing_overlay, render_now_playing_frames
 
 
 def _black() -> Image.Image:
@@ -50,3 +49,36 @@ def test_render_now_playing_frames_custom_delay():
     frames = render_now_playing_frames(img, "Track", "Artist", page_delay=1000)
     _, duration = frames[0]
     assert duration == 1000
+
+
+def test_apply_corner_char_returns_image():
+    img = _black()
+    result = apply_corner_char(img, "+")
+    assert result is img
+
+
+def test_apply_corner_char_writes_pixels():
+    img = _black()
+    apply_corner_char(img, "+")
+    pixels = [img.getpixel((x, y)) for x in range(img.width) for y in range(img.height)]
+    assert any(p == (255, 255, 255) for p in pixels)
+
+
+def test_apply_corner_char_minus():
+    img = _black()
+    result = apply_corner_char(img, "-")
+    assert result is img
+
+
+def test_apply_corner_char_unknown_skips():
+    img = _black()
+    result = apply_corner_char(img, "~")
+    assert result is img
+    pixels = [img.getpixel((x, y)) for x in range(img.width) for y in range(img.height)]
+    assert not any(p == (255, 255, 255) for p in pixels)
+
+
+def test_apply_corner_char_empty_skips():
+    img = _black()
+    result = apply_corner_char(img, "")
+    assert result is img
