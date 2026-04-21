@@ -1,7 +1,11 @@
 """Tests for tottie.overlay."""
 
 from PIL import Image
-from tottie.overlay import apply_corner_char, apply_now_playing_overlay, render_now_playing_frames
+from tottie.overlay import (
+    apply_corner_char,
+    apply_now_playing_overlay,
+    render_now_playing_frames,
+)
 
 
 def _black() -> Image.Image:
