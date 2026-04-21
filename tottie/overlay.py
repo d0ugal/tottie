@@ -71,8 +71,6 @@ PAGE_CHARS = MAX_CHARS
 
 START_X = 2
 START_Y = 2
-CORNER_X = START_X
-CORNER_Y = SIZE - GLYPH_H - START_Y  # 57 for a 64×64 display
 
 
 def _text_width(text: str) -> int:
@@ -81,20 +79,28 @@ def _text_width(text: str) -> int:
     return len(text) * CHAR_ADVANCE - SPACING
 
 
-def apply_corner_char(img: Image.Image, char: str) -> Image.Image:
-    """Draw a single glyph at the bottom-left corner with a darkened background."""
+def apply_corner_char(img: Image.Image, char: str, scale: int = 2) -> Image.Image:
+    """Draw a single glyph at the bottom-right corner with a darkened background.
+
+    Each glyph pixel is rendered as a scale×scale block (default 2×2).
+    """
     lookup = char.upper() if char.isalpha() else char
     rows = GLYPHS.get(lookup)
     if not rows:
         return img
 
+    glyph_w = GLYPH_W * scale
+    glyph_h = GLYPH_H * scale
+    corner_x = SIZE - glyph_w - START_X
+    corner_y = SIZE - glyph_h - START_Y
+
     pix = img.load()
     assert pix is not None
 
-    for dy in range(-1, GLYPH_H + 1):
-        for dx in range(-1, GLYPH_W + 1):
-            px = CORNER_X - 1 + dx
-            py = CORNER_Y + dy
+    for dy in range(-1, glyph_h + 1):
+        for dx in range(-1, glyph_w + 1):
+            px = corner_x - 1 + dx
+            py = corner_y + dy
             if 0 <= px < SIZE and 0 <= py < SIZE:
                 r, g, b = pix[px, py]  # type: ignore[misc]
                 pix[px, py] = (r >> 2, g >> 2, b >> 2)
@@ -102,9 +108,12 @@ def apply_corner_char(img: Image.Image, char: str) -> Image.Image:
     for row_idx, row_bits in enumerate(rows):
         for col in range(GLYPH_W):
             if row_bits & (1 << (GLYPH_W - 1 - col)):
-                px, py = CORNER_X + col, CORNER_Y + row_idx
-                if 0 <= px < SIZE and 0 <= py < SIZE:
-                    pix[px, py] = (255, 255, 255)
+                for sy in range(scale):
+                    for sx in range(scale):
+                        px = corner_x + col * scale + sx
+                        py = corner_y + row_idx * scale + sy
+                        if 0 <= px < SIZE and 0 <= py < SIZE:
+                            pix[px, py] = (255, 255, 255)
 
     return img
 
