@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/d0ugal/tottie/compare/v0.2.1...v0.3.0) (2026-04-21)
+
+
+### Features
+
+* add apply_corner_char for bottom-left single-glyph overlay ([3db4281](https://github.com/d0ugal/tottie/commit/3db4281ce01cb9909da2fd019ea238d796cd0c0d))
+
 ## [0.2.1](https://github.com/d0ugal/tottie/compare/v0.2.0...v0.2.1) (2026-04-16)
 
 
