@@ -40,7 +40,7 @@ GLYPHS: dict[str, list[int]] = {
     "K": [0b101, 0b101, 0b110, 0b101, 0b101],
     "L": [0b100, 0b100, 0b100, 0b100, 0b111],
     "M": [0b101, 0b111, 0b111, 0b101, 0b101],
-    "N": [0b101, 0b111, 0b111, 0b111, 0b101],
+    "N": [0b111, 0b101, 0b101, 0b101, 0b101],
     "O": [0b111, 0b101, 0b101, 0b101, 0b111],
     "P": [0b110, 0b101, 0b110, 0b100, 0b100],
     "Q": [0b111, 0b101, 0b101, 0b111, 0b011],
@@ -131,18 +131,20 @@ def apply_now_playing_overlay(img: Image.Image, track: str, artist: str) -> Imag
 
     pix = img.load()
     assert pix is not None
-    total_h = (LINE_SPACING if track_str else 0) + (GLYPH_H if artist_str else 0)
-    track_w = _text_width(track_str)
-    artist_w = _text_width(artist_str)
-    bg_w = max(track_w, artist_w) + 2
 
-    for dy in range(-1, total_h + 1):
-        for dx in range(-1, bg_w + 1):
-            px = START_X - 1 + dx
-            py = START_Y + dy
-            if 0 <= px < SIZE and 0 <= py < SIZE:
-                r, g, b = pix[px, py]  # type: ignore[misc]
-                pix[px, py] = (r >> 2, g >> 2, b >> 2)
+    def _darken_line(y: int, text_w: int) -> None:
+        for dy in range(-1, GLYPH_H + 1):
+            for dx in range(-1, text_w + 3):
+                px = START_X - 1 + dx
+                py = y + dy
+                if 0 <= px < SIZE and 0 <= py < SIZE:
+                    r, g, b = pix[px, py]  # type: ignore[misc]
+                    pix[px, py] = (r >> 1, g >> 1, b >> 1)
+
+    if track_str:
+        _darken_line(START_Y, _text_width(track_str))
+    if artist_str:
+        _darken_line(START_Y + LINE_SPACING, _text_width(artist_str))
 
     def draw_string(text: str, y: int) -> None:
         cursor_x = START_X
