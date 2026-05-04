@@ -118,10 +118,15 @@ def apply_corner_char(img: Image.Image, char: str, scale: int = 2) -> Image.Imag
     return img
 
 
-def apply_now_playing_overlay(img: Image.Image, track: str, artist: str) -> Image.Image:
+def apply_now_playing_overlay(
+    img: Image.Image, track: str, artist: str, dim: float = 0.5
+) -> Image.Image:
     """Draw darkened background + white pixel-font track/artist text onto img.
 
     Modifies img in place and returns it.
+
+    dim controls how much of the original pixel brightness is kept behind the
+    text (0.0 = black, 1.0 = no change, default 0.5).
     """
     track_str = track.upper()[:MAX_CHARS]
     artist_str = artist.upper()[:MAX_CHARS]
@@ -139,7 +144,7 @@ def apply_now_playing_overlay(img: Image.Image, track: str, artist: str) -> Imag
                 py = y + dy
                 if 0 <= px < SIZE and 0 <= py < SIZE:
                     r, g, b = pix[px, py]  # type: ignore[misc]
-                    pix[px, py] = (r >> 1, g >> 1, b >> 1)
+                    pix[px, py] = (round(r * dim), round(g * dim), round(b * dim))
 
     if track_str:
         _darken_line(START_Y, _text_width(track_str))
@@ -174,6 +179,7 @@ def render_now_playing_frames(
     track: str,
     artist: str,
     page_delay: int = 3000,
+    dim: float = 0.5,
 ) -> list[tuple[Image.Image, int]]:
     """Return (frame, duration_ms) pairs for now-playing display.
 
@@ -198,7 +204,7 @@ def render_now_playing_frames(
         t = track_pages[i] if i < len(track_pages) else ""
         a = artist_pages[i] if i < len(artist_pages) else ""
         frame = base_img.copy()
-        apply_now_playing_overlay(frame, t, a)
+        apply_now_playing_overlay(frame, t, a, dim=dim)
         frames.append((frame, page_delay))
 
     return frames
