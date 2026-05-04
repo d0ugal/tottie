@@ -77,6 +77,38 @@ def test_render_now_playing_frames_custom_delay():
     assert duration == 1000
 
 
+def test_apply_overlay_bottom_writes_pixels_near_bottom():
+    img = _black()
+    apply_now_playing_overlay(img, "A", "", position="bottom")
+    # White glyph pixels should appear in the bottom half of the image
+    pixels_bottom = [img.getpixel((x, y)) for x in range(64) for y in range(32, 64)]
+    assert any(p == (255, 255, 255) for p in pixels_bottom)
+
+
+def test_apply_overlay_bottom_no_pixels_at_top():
+    img = _black()
+    apply_now_playing_overlay(img, "A", "", position="bottom")
+    # No white pixels in the top half
+    pixels_top = [img.getpixel((x, y)) for x in range(64) for y in range(32)]
+    assert not any(p == (255, 255, 255) for p in pixels_top)
+
+
+def test_apply_overlay_top_no_pixels_at_bottom():
+    img = _black()
+    apply_now_playing_overlay(img, "A", "", position="top")
+    # No white pixels in the bottom half
+    pixels_bottom = [img.getpixel((x, y)) for x in range(64) for y in range(32, 64)]
+    assert not any(p == (255, 255, 255) for p in pixels_bottom)
+
+
+def test_render_now_playing_frames_position_forwarded():
+    img = _black()
+    frames = render_now_playing_frames(img, "A", "", position="bottom")
+    frame, _ = frames[0]
+    pixels_bottom = [frame.getpixel((x, y)) for x in range(64) for y in range(32, 64)]
+    assert any(p == (255, 255, 255) for p in pixels_bottom)
+
+
 def test_apply_corner_char_returns_image():
     img = _black()
     result = apply_corner_char(img, "+")

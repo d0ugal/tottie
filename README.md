@@ -49,11 +49,14 @@ frames = render_now_playing_frames(img, track="A Very Long Track Title Indeed", 
 # frames is a list of (PIL.Image, duration_ms) pairs
 ```
 
-Both functions accept an optional `dim` parameter (float, default `0.5`) that controls how much of the original image shows through the text background. `0.0` renders a solid black background; `1.0` applies no darkening at all.
+Both functions accept optional `dim` and `position` parameters:
+
+- `dim` (float, default `0.5`) — how much of the original image shows through the text background. `0.0` = solid black, `1.0` = no darkening.
+- `position` (`"top"` or `"bottom"`, default `"top"`) — where the text block is placed on the image.
 
 ```python
-apply_now_playing_overlay(img, track="Astronomy", artist="Blue Oyster Cult", dim=0.7)
-render_now_playing_frames(img, track="...", artist="...", dim=0.7)
+apply_now_playing_overlay(img, track="Astronomy", artist="Blue Oyster Cult", dim=0.7, position="bottom")
+render_now_playing_frames(img, track="...", artist="...", dim=0.7, position="bottom")
 ```
 
 ### Image utilities
