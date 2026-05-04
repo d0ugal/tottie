@@ -119,7 +119,11 @@ def apply_corner_char(img: Image.Image, char: str, scale: int = 2) -> Image.Imag
 
 
 def apply_now_playing_overlay(
-    img: Image.Image, track: str, artist: str, dim: float = 0.5
+    img: Image.Image,
+    track: str,
+    artist: str,
+    dim: float = 0.5,
+    position: str = "top",
 ) -> Image.Image:
     """Draw darkened background + white pixel-font track/artist text onto img.
 
@@ -127,12 +131,21 @@ def apply_now_playing_overlay(
 
     dim controls how much of the original pixel brightness is kept behind the
     text (0.0 = black, 1.0 = no change, default 0.5).
+
+    position is "top" (default) or "bottom".
     """
     track_str = track.upper()[:MAX_CHARS]
     artist_str = artist.upper()[:MAX_CHARS]
 
     if not track_str and not artist_str:
         return img
+
+    n_lines = (1 if track_str else 0) + (1 if artist_str else 0)
+    block_h = (LINE_SPACING if n_lines == 2 else 0) + GLYPH_H
+    if position == "bottom":
+        y0 = SIZE - START_Y - block_h
+    else:
+        y0 = START_Y
 
     pix = img.load()
     assert pix is not None
@@ -147,9 +160,9 @@ def apply_now_playing_overlay(
                     pix[px, py] = (round(r * dim), round(g * dim), round(b * dim))
 
     if track_str:
-        _darken_line(START_Y, _text_width(track_str))
+        _darken_line(y0, _text_width(track_str))
     if artist_str:
-        _darken_line(START_Y + LINE_SPACING, _text_width(artist_str))
+        _darken_line(y0 + LINE_SPACING, _text_width(artist_str))
 
     def draw_string(text: str, y: int) -> None:
         cursor_x = START_X
@@ -167,9 +180,9 @@ def apply_now_playing_overlay(
             cursor_x += CHAR_ADVANCE
 
     if track_str:
-        draw_string(track_str, START_Y)
+        draw_string(track_str, y0)
     if artist_str:
-        draw_string(artist_str, START_Y + LINE_SPACING)
+        draw_string(artist_str, y0 + LINE_SPACING)
 
     return img
 
@@ -180,12 +193,16 @@ def render_now_playing_frames(
     artist: str,
     page_delay: int = 3000,
     dim: float = 0.5,
+    position: str = "top",
 ) -> list[tuple[Image.Image, int]]:
     """Return (frame, duration_ms) pairs for now-playing display.
 
     Text is split into pages of PAGE_CHARS characters; both title and artist
     advance to the next page together. A single page produces one static frame;
     multiple pages cycle slowly.
+
+    position is "top" (default) or "bottom"; dim and position are forwarded to
+    apply_now_playing_overlay.
     """
     track_upper = track.upper()[:MAX_INPUT_CHARS]
     artist_upper = artist.upper()[:MAX_INPUT_CHARS]
@@ -204,7 +221,7 @@ def render_now_playing_frames(
         t = track_pages[i] if i < len(track_pages) else ""
         a = artist_pages[i] if i < len(artist_pages) else ""
         frame = base_img.copy()
-        apply_now_playing_overlay(frame, t, a, dim=dim)
+        apply_now_playing_overlay(frame, t, a, dim=dim, position=position)
         frames.append((frame, page_delay))
 
     return frames
