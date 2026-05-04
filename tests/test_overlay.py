@@ -32,6 +32,28 @@ def test_apply_overlay_writes_pixels():
     assert any(p == (255, 255, 255) for p in pixels)
 
 
+def test_apply_overlay_dim_zero_blacks_background():
+    img = Image.new("RGB", (64, 64), (200, 100, 50))
+    apply_now_playing_overlay(img, "A", "", dim=0.0)
+    # x=1 is in the 1px left border of the background — not a glyph pixel
+    assert img.getpixel((1, 2)) == (0, 0, 0)
+
+
+def test_apply_overlay_dim_one_preserves_background():
+    img = Image.new("RGB", (64, 64), (200, 100, 50))
+    apply_now_playing_overlay(img, "A", "", dim=1.0)
+    # x=1 is in the 1px left border of the background — not a glyph pixel
+    assert img.getpixel((1, 2)) == (200, 100, 50)
+
+
+def test_render_now_playing_frames_dim_forwarded():
+    img = Image.new("RGB", (64, 64), (200, 100, 50))
+    frames = render_now_playing_frames(img, "A", "", dim=0.0)
+    frame, _ = frames[0]
+    # x=1 is in the 1px left border of the background — not a glyph pixel
+    assert frame.getpixel((1, 2)) == (0, 0, 0)
+
+
 def test_render_now_playing_frames_single():
     img = _black()
     frames = render_now_playing_frames(img, "Short", "Artist")
