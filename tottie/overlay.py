@@ -142,10 +142,7 @@ def apply_now_playing_overlay(
 
     n_lines = (1 if track_str else 0) + (1 if artist_str else 0)
     block_h = (LINE_SPACING if n_lines == 2 else 0) + GLYPH_H
-    if position == "bottom":
-        y0 = SIZE - START_Y - block_h
-    else:
-        y0 = START_Y
+    y0 = SIZE - START_Y - block_h if position == "bottom" else START_Y
 
     pix = img.load()
     assert pix is not None
