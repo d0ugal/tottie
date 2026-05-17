@@ -8,7 +8,7 @@ Tottie is a Python library for rendering images onto 64×64 LED matrix displays.
 
 - **`tottie.moon`** — Moon phase renderer. Draws the current moon disc with texture, a direction/altitude ring indicator, and a lunar cycle progress bar across the top edge.
 - **`tottie.overlay`** — Pixel-font text overlay. Renders track/artist (or any two lines of text) onto an image using a compact 3×5 bitmap font, with automatic text paging for long strings.
-- **`tottie.image`** — Image utilities. Centre-crop-and-resize to any square size, and RGB565 conversion for displays that accept raw pixel data over serial/MQTT.
+- **`tottie.image`** — Image utilities. Square fit (crop-to-fill or letterbox) at any size, and RGB565 conversion for displays that accept raw pixel data over serial/MQTT.
 
 ## Installation
 
@@ -68,6 +68,18 @@ from tottie import crop_and_resize, to_rgb565
 img = Image.open("photo.jpg").convert("RGB")
 small = crop_and_resize(img, size=64)   # centre-crop square, resize to 64×64
 raw = to_rgb565(small)                  # bytes ready to publish over MQTT
+```
+
+`crop_and_resize` accepts a `fit` argument:
+
+- `fit="cover"` (default) — crop to a square then resize. Pixels outside the
+  crop are discarded. Use `anchor="top_left"` etc. to bias the crop.
+- `fit="contain"` — letterbox: scale the whole image to fit, padding the
+  short axis with `bg` (default black). Preserves the entire source image,
+  good for wide photos like aircraft shots.
+
+```python
+letterboxed = crop_and_resize(img, size=64, fit="contain")
 ```
 
 ## Requirements

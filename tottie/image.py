@@ -12,16 +12,36 @@ def crop_and_resize(
     img: Image.Image,
     size: int = SIZE,
     anchor: str = "center",
+    fit: str = "cover",
+    bg: tuple[int, int, int] = (0, 0, 0),
 ) -> Image.Image:
-    """Crop to a square region then resize to size×size.
+    """Crop or letterbox to size×size.
 
-    anchor controls which part of the image is taken:
+    fit controls how the image is fitted to the square target:
+      "cover"   — crop to a square at `anchor`, then resize to size×size (default).
+                  Fills the target; pixels outside the crop are discarded.
+      "contain" — letterbox: scale to fit entirely within size×size preserving
+                  aspect ratio, then centre on a `bg`-coloured canvas. `anchor`
+                  is ignored.
+
+    anchor (used only when fit="cover") controls which part of the image
+    is taken:
       "center"       — centre of the image (default)
       "top_left"     — top-left corner
       "top_right"    — top-right corner
       "bottom_left"  — bottom-left corner
       "bottom_right" — bottom-right corner
     """
+    if fit == "contain":
+        w, h = img.size
+        scale = min(size / w, size / h)
+        new_w = max(1, round(w * scale))
+        new_h = max(1, round(h * scale))
+        resized = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+        canvas = Image.new(img.mode, (size, size), bg)
+        canvas.paste(resized, ((size - new_w) // 2, (size - new_h) // 2))
+        return canvas
+
     w, h = img.size
     m = min(w, h)
     if anchor == "top_left":
