@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/d0ugal/tottie/compare/v0.5.0...v0.6.0) (2026-05-17)
+
+
+### Features
+
+* add fit=contain (letterbox) to crop_and_resize ([8787c13](https://github.com/d0ugal/tottie/commit/8787c13cd8c408d5abd549d2822f483ef301d7ef))
+
 ## [0.5.0](https://github.com/d0ugal/tottie/compare/v0.4.0...v0.5.0) (2026-05-04)
 
 
