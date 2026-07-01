@@ -1,4 +1,4 @@
-"""Moon phase renderer for 64×64 LED matrix displays.
+"""Moon phase renderer for 64x64 LED matrix displays.
 
 Returns a PIL Image rather than writing files.
 Location and time are injected at call time.
@@ -157,7 +157,7 @@ def _draw_cycle_bar(pix, age: float) -> None:
 
 
 def render_image(lat: str, lon: str, elev: int, mirror_ew: bool = True) -> Image.Image:
-    """Render a 64×64 moon phase image and return it as a PIL Image.
+    """Render a 64x64 moon phase image and return it as a PIL Image.
 
     Args:
         lat: Latitude as a string (e.g. "51.5" or "51:30:00").
@@ -181,9 +181,7 @@ def render_image(lat: str, lon: str, elev: int, mirror_ew: bool = True) -> Image
         for x in range(1, SIZE - 1):
             dx, dy = x - CX, y - CY
             if dx * dx + dy * dy <= RADIUS * RADIUS:
-                pix[x, y] = _moon_colour(
-                    ew * dx / RADIUS, dy / RADIUS, data["age"], ew * rotation
-                )
+                pix[x, y] = _moon_colour(ew * dx / RADIUS, dy / RADIUS, data["age"], ew * rotation)
 
     alt = data["alt"]
     ring_col = _ring_colour(alt)

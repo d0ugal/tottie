@@ -1,4 +1,4 @@
-"""Tottie — wee image rendering library for 64×64 LED matrix displays."""
+"""Tottie — wee image rendering library for 64x64 LED matrix displays."""
 
 from tottie.image import crop_and_resize, to_rgb565
 from tottie.moon import render_image as render_moon
