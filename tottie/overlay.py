@@ -1,6 +1,6 @@
-"""Pixel-font text overlay for 64×64 LED matrix displays.
+"""Pixel-font text overlay for 64x64 LED matrix displays.
 
-Ported from tomglenn/idx-ai (MIT). Each glyph is 3×5 pixels encoded as
+Ported from tomglenn/idx-ai (MIT). Each glyph is 3x5 pixels encoded as
 5 rows of 3-bit bitmasks (MSB = left column).
 """
 
@@ -82,7 +82,7 @@ def _text_width(text: str) -> int:
 def apply_corner_char(img: Image.Image, char: str, scale: int = 2) -> Image.Image:
     """Draw a single glyph at the bottom-right corner with a darkened background.
 
-    Each glyph pixel is rendered as a scale×scale block (default 2×2).
+    Each glyph pixel is rendered as a scalexscale block (default 2x2).
     """
     lookup = char.upper() if char.isalpha() else char
     rows = GLYPHS.get(lookup)

@@ -36,7 +36,7 @@ def test_crop_and_resize_custom_size():
 
 
 def test_contain_wide_letterbox_top_bottom():
-    # 200×100 image into 64×64 with contain — scaled to 64×32, padded with 16px
+    # 200x100 image into 64x64 with contain — scaled to 64x32, padded with 16px
     # black bars above and below.
     img = Image.new("RGB", (200, 100), (255, 0, 0))
     result = crop_and_resize(img, fit="contain")
@@ -47,7 +47,7 @@ def test_contain_wide_letterbox_top_bottom():
 
 
 def test_contain_tall_pillarbox():
-    # 100×200 image into 64×64 with contain — scaled to 32×64, padded with 16px
+    # 100x200 image into 64x64 with contain — scaled to 32x64, padded with 16px
     # black bars left and right.
     img = Image.new("RGB", (100, 200), (0, 255, 0))
     result = crop_and_resize(img, fit="contain")
@@ -84,7 +84,7 @@ def test_cover_default_unchanged():
     img = Image.new("RGB", (200, 100), (255, 0, 0))
     result = crop_and_resize(img)
     assert result.size == (64, 64)
-    # Cover crops to a 100×100 square then resizes; every pixel is red.
+    # Cover crops to a 100x100 square then resizes; every pixel is red.
     assert result.getpixel((0, 0)) == (255, 0, 0)
     assert result.getpixel((63, 63)) == (255, 0, 0)
 
